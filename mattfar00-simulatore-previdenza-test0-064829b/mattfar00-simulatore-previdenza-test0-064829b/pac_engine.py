@@ -284,12 +284,18 @@ def info_storico_ticker(tickers: tuple):
 def scarica_prezzi_mensili(tickers: tuple):
     """
     Prezzi mensili AGGIUSTATI (auto_adjust=True: dividendi/split incorporati),
-    storia MASSIMA disponibile per ciascun ticker (nessun cap in anni: la
-    finestra comune finale e' determinata solo dalla data di nascita del
-    ticker piu' giovane, resa esplicita all'utente da info_storico_ticker
-    prima di arrivare qui).
-    Fondamentale per strumenti a distribuzione o azioni singole: senza
-    aggiustamento ogni stacco appare come un calo fittizio.
+    storia MASSIMA disponibile per ciascun ticker (nessun cap in anni).
+
+    IMPORTANTE: il DataFrame restituito NON viene tagliato alla finestra
+    comune (niente dropna() qui) — ogni colonna conserva la propria storia
+    completa, con NaN dove un ticker più giovane non esisteva ancora. Se
+    tagliassimo qui, chi consuma questo DataFrame più a valle (in
+    particolare la stima "storia massima per classe" di PAC avanzato)
+    perderebbe l'informazione su quanta storia in più hanno i ticker più
+    vecchi rispetto al più giovane — il toggle diventerebbe un no-op perché
+    il taglio sarebbe già avvenuto qui, a monte, per tutti allo stesso modo.
+    I consumer che hanno bisogno della finestra comune (es.
+    stima_parametri_portafoglio) fanno il proprio dropna() internamente.
     """
     import yfinance as yf
 
@@ -307,10 +313,11 @@ def scarica_prezzi_mensili(tickers: tuple):
             col_data = col_data.iloc[:, 0]
         serie[t] = col_data.resample("ME").last()
 
-    df = pd.DataFrame(serie).dropna()
-    if len(df) < 24:
+    df = pd.DataFrame(serie)
+    comune = df.dropna()
+    if len(comune) < 24:
         raise ValueError(
-            f"Storico comune troppo corto ({len(df)} mesi): rimuovi o sostituisci "
+            f"Storico comune troppo corto ({len(comune)} mesi): rimuovi o sostituisci "
             f"il ticker più giovane del portafoglio (vedi diagnostica storico sopra)."
         )
     return df
