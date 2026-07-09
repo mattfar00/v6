@@ -1584,14 +1584,12 @@ r0 = df_main.iloc[0]
 vers_vol_anno1 = r0["Vers. Volontario (€)"]   # il minimo CCNL non è un flusso aggiuntivo
 risparmio_anno1 = r0["Risparmio IRPEF (€)"]
 ca_anno1 = r0["Contrib. Aziendale (€)"]
-pac_anno1 = r0["PAC annuo (€)"]
 costo_netto_fondo_anno1 = max(0.0, vers_vol_anno1 - risparmio_anno1)
 
-m1, m2, m3, m4 = st.columns(4)
+m1, m2, m3 = st.columns(3)
 m1.metric("Costo netto fondo/mese", f"€ {costo_netto_fondo_anno1/mensilita:,.0f}")
-m2.metric("Costo PAC/mese", f"€ {pac_anno1/12:,.0f}")
-m3.metric("Totale investito/mese", f"€ {(costo_netto_fondo_anno1/mensilita + pac_anno1/12):,.0f}")
-m4.metric("Contributo azienda (gratis)/anno", f"€ {ca_anno1:,.0f}")
+m2.metric("Contributo azienda (gratis)/anno", f"€ {ca_anno1:,.0f}")
+m3.metric("Totale versato fondo/mese", f"€ {(vers_vol_anno1 + ca_anno1)/mensilita:,.0f}")
 if (usa_variazioni_vol_extra and variazioni_vol_extra) or (usa_variazioni_pac and variazioni_pac):
     st.caption("ℹ️ Hai pianificato variazioni dei versamenti nel tempo: questi "
                "importi valgono solo per l'Anno 1, guarda la tabella anno per "
