@@ -1,0 +1,101 @@
+{
+  "nome": "Fon.Te",
+  "csv": "fonte.csv",
+  "sito": "https://www.fondofonte.it",
+  "_note": "Benchmark aggiornati lug-2026 dal DPI ufficiale (fondofonte.it/wp-content/uploads/2022/03/FONTEdocumento_politica_investimento-1.pdf): pesi esatti per indice per Sviluppo/Crescita/Dinamico (in precedenza solo split bond/equity aggregato da ricerca web). Resta da verificare la corrispondenza tra colonne CSV e comparti ufficiali, e resta il limite strutturale hedging (vedi da_verificare per comparto).",
+
+  "comparti": {
+    "Conservativo": {
+      "nome_ufficiale": "Fon.Te Garantito",
+      "classe_rischio": "prudente",
+      "garanzia": true,
+      "obiettivo": "rivalutazione del TFR",
+      "floor_montante": "capitale versato (verificare condizioni esatte)",
+      "benchmark": [],
+      "isc_10a": null,
+      "ricostruzione": "off",
+      "fonte": "fondofonte.it — comparto garantito",
+      "da_verificare": ["condizioni garanzia", "corrispondenza colonna CSV", "ISC"],
+      "_nota": "Gestione assicurativa: non ricostruire (storico reale + shrinkage + floor)."
+    },
+    "Sviluppo": {
+      "nome_ufficiale": "Fon.Te Sviluppo (ex Bilanciato)",
+      "classe_rischio": "bilanciato",
+      "garanzia": false,
+      "benchmark": [
+        {"serie": "vbmfx_eur_hedged", "peso": 0.40,
+         "descrizione_indice": "ICE BofAML 1-10Y Pan-Europe Government, TR € hedged"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.10,
+         "descrizione_indice": "ICE BofAML 1-10Y US Treasury, TR € hedged"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.05,
+         "descrizione_indice": "ICE BofAML US Emerging Markets External Sovereign IG, TR € hedged"},
+        {"serie": "vbmfx", "peso": 0.10,
+         "descrizione_indice": "ICE BofAML Euro Corporate All mats, TR € — nativo EUR, nessun hedge da applicare"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.10,
+         "descrizione_indice": "ICE BofAML US Large Cap Corporate, TR € hedged"},
+        {"serie": "world_composite", "peso": 0.225,
+         "descrizione_indice": "Dow Jones Sustainability World Net Return €"},
+        {"serie": "veurx", "peso": 0.025,
+         "descrizione_indice": "MSCI Italy Small Cap, Net Return € (nessun proxy Italia small-cap disponibile: veurx = ripiego Europa, impreciso)"}
+      ],
+      "isc_10a": null,
+      "ricostruzione": "off",
+      "fonte": "DPI Fon.Te (fondofonte.it/wp-content/uploads/2022/03/FONTEdocumento_politica_investimento-1.pdf), Comparto Sviluppo, tabella benchmark (7 indici) + aggiornamento 01/03/2022 — verificato lug-2026",
+      "da_verificare": [
+        "corrispondenza colonna CSV 'Sviluppo' = Sviluppo (ex Bilanciato)", "ISC",
+        "le voci 'hedged EUR' ora usano vbmfx_eur_hedged (copertura sintetica via differenziale tassi USD/EUR, storia_lunga.py): approssimazione su parità coperta dei tassi, copertura solo dal ~1999",
+        "MSCI Italy Small Cap (2.5%) non ha proxy dedicato: usato veurx come ripiego grossolano"
+      ]
+    },
+    "Crescita": {
+      "nome_ufficiale": "Fon.Te Crescita",
+      "classe_rischio": "bilanciato",
+      "garanzia": false,
+      "benchmark": [
+        {"serie": "vbmfx_eur_hedged", "peso": 0.35,
+         "descrizione_indice": "ICE BofAML Pan-Europe Government All mats, TR € hedged"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.10,
+         "descrizione_indice": "ICE BofAML US Treasury All mats, TR € hedged"},
+        {"serie": "vbmfx", "peso": 0.15,
+         "descrizione_indice": "ICE BofAML Euro Corporate All mats, TR € — nativo EUR, nessun hedge da applicare"},
+        {"serie": "world_composite", "peso": 0.35,
+         "descrizione_indice": "Dow Jones Sustainability World Net Return €"},
+        {"serie": "world_composite", "peso": 0.05,
+         "descrizione_indice": "Dow Jones Sustainability World Net Return LOCAL CURRENCY (nessun proxy in valuta locale: usato world_composite, che è comunque in USD non locale)"}
+      ],
+      "isc_10a": null,
+      "ricostruzione": "off",
+      "fonte": "DPI Fon.Te (fondofonte.it/wp-content/uploads/2022/03/FONTEdocumento_politica_investimento-1.pdf), Comparto Crescita, tabella benchmark (5 indici) — verificato lug-2026",
+      "da_verificare": [
+        "corrispondenza colonna CSV 'Crescita' = Crescita", "ISC",
+        "le voci 'hedged EUR' ora usano vbmfx_eur_hedged (copertura sintetica via differenziale tassi USD/EUR): approssimazione, copertura solo dal ~1999",
+        "la quota 'Local Currency' (5%) non è replicabile con le serie disponibili (tutte in USD): approssimata con world_composite, introduce un rumore di cambio in più"
+      ]
+    },
+    "Dinamico": {
+      "nome_ufficiale": "Fon.Te Dinamico",
+      "classe_rischio": "azionario",
+      "garanzia": false,
+      "benchmark": [
+        {"serie": "vbmfx_eur_hedged", "peso": 0.25,
+         "descrizione_indice": "ICE BofAML Pan-Europe Government All mats, TR € hedged"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.05,
+         "descrizione_indice": "ICE BofAML US Treasury All mats, TR € hedged"},
+        {"serie": "vbmfx", "peso": 0.10,
+         "descrizione_indice": "ICE BofAML Euro Corporate All mats, TR € — nativo EUR, nessun hedge da applicare"},
+        {"serie": "world_composite", "peso": 0.35,
+         "descrizione_indice": "Dow Jones Sustainability World Net Return €"},
+        {"serie": "world_composite", "peso": 0.25,
+         "descrizione_indice": "Dow Jones Sustainability World Net Return LOCAL CURRENCY (approssimato con world_composite, stesso caveat del Crescita)"}
+      ],
+      "isc_10a": null,
+      "ricostruzione": "off",
+      "fonte": "DPI Fon.Te (fondofonte.it/wp-content/uploads/2022/03/FONTEdocumento_politica_investimento-1.pdf), Comparto Dinamico, tabella benchmark (5 indici) — verificato lug-2026",
+      "da_verificare": [
+        "corrispondenza colonna CSV 'Dinamico' = Dinamico", "ISC",
+        "le voci 'hedged EUR' ora usano vbmfx_eur_hedged: approssimazione, copertura solo dal ~1999",
+        "quota 'Local Currency' (25%, la più grande delle tre comparti) approssimata con world_composite: qui il mismatch di cambio pesa di più che negli altri comparti"
+      ]
+    }
+  }
+}

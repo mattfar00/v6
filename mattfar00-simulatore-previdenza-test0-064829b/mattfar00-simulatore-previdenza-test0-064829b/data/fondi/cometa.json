@@ -1,0 +1,105 @@
+{
+  "nome": "Cometa",
+  "csv": "cometa.csv",
+  "sito": "https://www.cometafondo.it",
+  "_note": "Benchmark da ricerca web lug-2026 (gestione-finanziaria, DPI): confermare su Nota informativa Parte II 'Le opzioni di investimento' e DPI vigente. classe_rischio pilota l'ancora di shrinkage. ricostruzione: 'off' finche' da_verificare non e' vuoto.",
+
+  "comparti": {
+    "Monetario": {
+      "nome_ufficiale": "Cometa Monetario Plus",
+      "classe_rischio": "prudente",
+      "garanzia": false,
+      "benchmark": [
+        {"serie": "vusxx", "peso": 1.0,
+         "descrizione_indice": "obbligazionario breve termine euro / monetario"}
+      ],
+      "isc_10a": null,
+      "ricostruzione": "off",
+      "fonte": "cometafondo.it/gestione-finanziaria (obbligazionario puro)",
+      "da_verificare": ["indice esatto del benchmark", "ISC"]
+    },
+    "Garantito": {
+      "nome_ufficiale": "Cometa Sicurezza (gestione assicurativa)",
+      "classe_rischio": "prudente",
+      "garanzia": true,
+      "obiettivo": "rendimento comparabile alla rivalutazione del TFR",
+      "floor_montante": "capitale versato (verificare condizioni esatte della garanzia)",
+      "benchmark": [],
+      "isc_10a": null,
+      "ricostruzione": "off",
+      "fonte": "cometafondo.it — comparto garantito",
+      "da_verificare": ["condizioni garanzia", "ISC"],
+      "_nota": "Gestione assicurativa: il mix benchmark descrive male il payoff. NON ricostruire: storico reale + shrinkage + floor (Blocco D)."
+    },
+    "Bilanciato": {
+      "nome_ufficiale": "Cometa Reddito",
+      "classe_rischio": "bilanciato",
+      "garanzia": false,
+      "benchmark": [
+        {"serie": "vusxx", "peso": 0.11,
+         "descrizione_indice": "Liquidità e titoli assimilabili"},
+        {"serie": "vbmfx", "peso": 0.20,
+         "descrizione_indice": "Obbligazioni governative Euro nominali"},
+        {"serie": "vbmfx", "peso": 0.11,
+         "descrizione_indice": "Obbligazioni governative Paesi sviluppati non Euro nominali"},
+        {"serie": "vbmfx", "peso": 0.06,
+         "descrizione_indice": "Obbligazioni governative Paesi sviluppati Inflation linked"},
+        {"serie": "vbmfx", "peso": 0.03,
+         "descrizione_indice": "Obbligazioni governative Paesi emergenti in USD"},
+        {"serie": "vbmfx", "peso": 0.13,
+         "descrizione_indice": "Obbligazioni EUR e GBP corporate IG"},
+        {"serie": "vbmfx", "peso": 0.10,
+         "descrizione_indice": "Obbligazioni USD corporate IG"},
+        {"serie": "vbmfx", "peso": 0.02,
+         "descrizione_indice": "Obbligazioni global corporate HY in EUR/CAD/GBP/USD"},
+        {"serie": "world_composite", "peso": 0.22,
+         "descrizione_indice": "Azioni Paesi sviluppati"},
+        {"serie": "veiex", "peso": 0.03,
+         "descrizione_indice": "Azioni Paesi emergenti"}
+      ],
+      "isc_10a": null,
+      "ricostruzione": "off",
+      "fonte": "DPI Cometa (Documento sulla Politica di Investimento, cometafondo.it/wp-content/uploads/2024/03/Documento-sulla-Politica-di-investimento-DPI.pdf), sez. 3.2 Comparto Reddito, tabella AAS iniziale dei gestori — verificato lug-2026",
+      "da_verificare": [
+        "corrispondenza colonna CSV 'Bilanciato' = Reddito", "ISC",
+        "le 7 voci obbligazionarie ufficiali sono TUTTE accorpate su vbmfx (unico proxy bond disponibile): niente copertura cambio EUR nei dati proxy mentre ~63% del bond ufficiale è hedged — R² strutturalmente limitato finché non si aggiungono proxy EUR-hedged",
+        "world_composite include ~10% EM al suo interno: lieve doppio conteggio con la voce 'Azioni Paesi emergenti' separata (veiex)"
+      ]
+    },
+    "Azionario": {
+      "nome_ufficiale": "Cometa Crescita",
+      "classe_rischio": "azionario",
+      "garanzia": false,
+      "benchmark": [
+        {"serie": "vbmfx", "peso": 0.08,
+         "descrizione_indice": "Obbligazioni governative Euro nominali (ICE BofA Euro Government all mats) — nativo EUR, nessun hedge da applicare"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.10,
+         "descrizione_indice": "Obbligazioni gov. Paesi sviluppati non Euro, hedged EUR (ICE BofA Global Gov ex EMU)"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.03,
+         "descrizione_indice": "Obbligazioni gov. Paesi sviluppati inflation linked, hedged EUR"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.02,
+         "descrizione_indice": "Obbligazioni gov. Paesi emergenti USD, hedged EUR"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.07,
+         "descrizione_indice": "Obbligazioni EUR/GBP corporate IG, hedged EUR (ICE BofA Pan-Europe corp)"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.12,
+         "descrizione_indice": "Obbligazioni USD corporate IG, hedged EUR (ICE BofA US corp large cap)"},
+        {"serie": "vbmfx_eur_hedged", "peso": 0.03,
+         "descrizione_indice": "Obbligazioni global corporate HY, hedged EUR"},
+        {"serie": "world_composite", "peso": 0.20,
+         "descrizione_indice": "Azioni Paesi sviluppati, MSCI World Net Return € (unhedged)"},
+        {"serie": "world_composite_eur_hedged", "peso": 0.30,
+         "descrizione_indice": "Azioni Paesi sviluppati, MSCI World Net Return 100% Hedged to EUR"},
+        {"serie": "veiex", "peso": 0.05,
+         "descrizione_indice": "Azioni Paesi emergenti, MSCI Emerging Markets Net Return €"}
+      ],
+      "isc_10a": null,
+      "ricostruzione": "off",
+      "fonte": "DPI Cometa (Documento sulla Politica di Investimento, cometafondo.it/wp-content/uploads/2024/03/Documento-sulla-Politica-di-investimento-DPI.pdf), sez. 3.3 Comparto Crescita, tabella BENCHMARK ufficiale (9 indici, azionario 55%) — verificato lug-2026",
+      "da_verificare": [
+        "corrispondenza colonna CSV 'Azionario' = Crescita", "ISC",
+        "le voci 'hedged EUR' ora usano vbmfx_eur_hedged/world_composite_eur_hedged (copertura sintetica via differenziale tassi USD/EUR, storia_lunga.py): APPROSSIMAZIONE su parità coperta dei tassi, non replica esatta del costo di hedging reale, e copre solo dal ~1999 (nascita EUR/EURIBOR) — mesi precedenti mancano su queste serie",
+        "gestione ATTIVA vincolata al benchmark (2 gestori, mandati multi-asset): anche con pesi e proxy perfetti, il tracking error rispetto al benchmark è per design non-zero (limite TEV 5%)"
+      ]
+    }
+  }
+}
